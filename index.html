@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GoodCart — Your happy place to shop</title>
+<style>
+:root{--ink:#17251f;--muted:#718078;--green:#176b4b;--mint:#eaf5ee;--lime:#d9f36a;--paper:#fbfcf8;--line:#e8eee8;--shadow:0 18px 50px #173b2912}
+*{box-sizing:border-box}body{margin:0;background:var(--paper);color:var(--ink);font-family:Inter,ui-sans-serif,system-ui,-apple-system,Segoe UI,sans-serif}
+button,input{font:inherit}button{cursor:pointer}.top{background:#163e2e;color:#eaf5ee;text-align:center;padding:9px 16px;font-size:12px;letter-spacing:.04em}.top b{color:var(--lime)}
+header{height:78px;display:flex;align-items:center;justify-content:space-between;gap:18px;padding:0 max(5vw,20px);background:#fff;border-bottom:1px solid var(--line);position:sticky;top:0;z-index:5}
+.logo{font-size:25px;font-weight:900;letter-spacing:-1.4px;color:var(--green);white-space:nowrap}.logo span{color:#b0d94b}
+.search{max-width:470px;flex:1;position:relative}.search input{width:100%;border:1px solid var(--line);background:#f6f8f4;border-radius:14px;padding:13px 16px 13px 43px;outline:none}.search input:focus{border-color:#80ad91;box-shadow:0 0 0 3px #176b4b12}.search:before{content:"⌕";position:absolute;left:15px;top:5px;font-size:27px;color:var(--muted)}
+.header-actions{display:flex;align-items:center;gap:12px}.wallet{background:#f0f7e8;border:1px solid #e2edda;border-radius:13px;padding:9px 13px;font-size:13px;font-weight:800;color:#315c35;white-space:nowrap}.cart-btn{border:0;background:var(--green);color:white;border-radius:13px;padding:12px 16px;font-weight:800}.cart-btn span{background:#ffffff30;border-radius:20px;padding:2px 7px;margin-left:5px}
+main{max-width:1220px;margin:auto;padding:28px 24px 80px}.hero{background:linear-gradient(110deg,#e6f2e8,#f3f7df);border-radius:25px;padding:42px 48px;display:flex;align-items:center;justify-content:space-between;overflow:hidden;min-height:230px;position:relative}.hero:after{content:"";position:absolute;width:290px;height:290px;border-radius:50%;background:#d4e8c4;right:12%;top:-95px;opacity:.55}.hero-copy{position:relative;z-index:1;max-width:560px}.eyebrow{text-transform:uppercase;letter-spacing:.15em;font-size:11px;font-weight:900;color:#527b5b}.hero h1{font-size:clamp(32px,5vw,54px);line-height:1.02;letter-spacing:-2.6px;margin:12px 0}.hero p{color:#64786b;margin:0;font-size:15px}.hero-art{font-size:110px;z-index:1;filter:drop-shadow(0 16px 12px #315c3520);transform:rotate(-8deg);margin-right:8%}
+.perks{display:flex;gap:22px;flex-wrap:wrap;padding:19px 4px;color:#65746b;font-size:12px}.perks span{display:flex;align-items:center;gap:7px}.perks b{color:var(--green);font-size:15px}
+.section-head{display:flex;align-items:end;justify-content:space-between;gap:12px;margin:27px 0 16px}.section-head h2{font-size:25px;letter-spacing:-.8px;margin:0}.section-head p{margin:5px 0 0;color:var(--muted);font-size:13px}
+.filters{display:flex;gap:8px;overflow:auto;padding:2px 0 14px}.filter{border:1px solid var(--line);background:white;border-radius:30px;padding:9px 15px;color:#637168;font-size:13px;white-space:nowrap}.filter.active{background:var(--green);color:white;border-color:var(--green)}
+.grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:16px}.product{background:white;border:1px solid var(--line);border-radius:18px;padding:12px;transition:.2s;min-width:0}.product:hover{transform:translateY(-4px);box-shadow:var(--shadow)}.photo{height:150px;border-radius:13px;background:#f4f7f1;display:grid;place-items:center;font-size:70px;position:relative}.tag{position:absolute;left:9px;top:9px;background:#fff;border-radius:20px;padding:5px 8px;font-size:10px;font-weight:800;color:#55715c}.product h3{font-size:14px;margin:12px 2px 4px}.desc{font-size:11px;color:#89958d;margin:0 2px 12px}.buy-row{display:flex;align-items:center;justify-content:space-between;gap:8px}.price{font-weight:900;font-size:17px}.add{border:0;border-radius:10px;background:#eaf4e9;color:var(--green);font-weight:900;font-size:19px;width:35px;height:35px}.add:hover{background:var(--green);color:white}
+.empty{grid-column:1/-1;text-align:center;padding:50px;color:var(--muted);background:white;border-radius:18px}
+.overlay{display:none;position:fixed;inset:0;background:#10251dcc;z-index:10;justify-content:flex-end}.overlay.show{display:flex}.drawer{background:#fff;width:min(440px,100%);height:100%;padding:24px;display:flex;flex-direction:column;box-shadow:-15px 0 50px #0002;animation:slide .22s ease}@keyframes slide{from{transform:translateX(30px);opacity:.7}to{transform:none;opacity:1}}
+.drawer-head{display:flex;justify-content:space-between;align-items:center}.drawer-head h2{margin:0;font-size:23px}.close{border:0;background:#f1f4ef;border-radius:50%;width:36px;height:36px;font-size:20px}.cart-items{overflow:auto;flex:1;margin:20px 0}.cart-item{display:flex;align-items:center;gap:12px;padding:13px 0;border-bottom:1px solid var(--line)}.cart-emoji{width:54px;height:54px;background:#f3f7f0;border-radius:12px;display:grid;place-items:center;font-size:28px}.item-info{flex:1}.item-info b{font-size:13px}.item-info small{display:block;color:var(--muted);margin-top:4px}.qty{display:flex;align-items:center;gap:8px}.qty button{border:1px solid var(--line);background:white;border-radius:8px;width:26px;height:26px}.summary{border-top:1px solid var(--line);padding-top:18px}.sumline{display:flex;justify-content:space-between;margin:8px 0;color:#69776e;font-size:13px}.sumline.total{font-size:20px;color:var(--ink);font-weight:900;margin-top:15px}.checkout{width:100%;border:0;background:var(--green);color:white;border-radius:13px;padding:15px;font-weight:900;margin-top:14px}.checkout:hover{background:#10563b}.fine{text-align:center;font-size:10px;color:#94a097;margin-top:10px}
+.toast{position:fixed;bottom:22px;left:50%;transform:translate(-50%,20px);background:#173e2e;color:white;padding:12px 18px;border-radius:30px;font-size:13px;opacity:0;transition:.25s;z-index:20;pointer-events:none}.toast.show{opacity:1;transform:translate(-50%,0)}
+.success{display:none;position:fixed;inset:0;background:#10251deF;z-index:30;align-items:center;justify-content:center;padding:20px}.success.show{display:flex}.success-card{background:#fff;border-radius:25px;padding:38px;max-width:440px;width:100%;text-align:center;animation:pop .3s ease}@keyframes pop{from{transform:scale(.88);opacity:0}to{transform:scale(1);opacity:1}}.checkmark{width:76px;height:76px;border-radius:50%;background:#e6f5e8;color:#25804e;display:grid;place-items:center;font-size:39px;margin:0 auto 16px}.success-card h2{font-size:29px;margin:8px 0}.success-card p{color:var(--muted);font-size:14px;line-height:1.6}.receipt{background:#f5f8f2;border-radius:14px;padding:15px;margin:20px 0;text-align:left;font-size:13px}.receipt div{display:flex;justify-content:space-between;margin:7px 0}.continue{border:0;background:var(--green);color:#fff;border-radius:12px;padding:14px 20px;width:100%;font-weight:900}
+footer{text-align:center;padding:25px;color:#87948a;font-size:11px;border-top:1px solid var(--line)}
+@media(max-width:850px){.grid{grid-template-columns:repeat(3,minmax(0,1fr))}.hero-art{font-size:85px;margin-right:2%}}
+@media(max-width:620px){header{height:auto;min-height:70px;flex-wrap:wrap;padding:12px 16px;gap:10px}.logo{font-size:22px}.search{order:3;flex-basis:100%;max-width:none}.wallet{font-size:11px;padding:8px}.cart-btn{padding:10px 12px}main{padding:18px 14px 55px}.hero{padding:28px 23px;min-height:190px}.hero-art{font-size:62px;margin:0}.hero p{font-size:13px}.perks{gap:12px}.grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.photo{height:120px;font-size:58px}.product{padding:9px}.section-head h2{font-size:22px}}
+</style>
+</head>
+<body>
+<div class="top">A LITTLE TREAT YOUR WAY <b>✦</b> FREE SHIPPING ON YOUR IMAGINARY ORDER</div>
+<header>
+  <div class="logo">goodcart<span>.</span></div>
+  <div class="search"><input id="search" type="search" placeholder="Search snacks, tech, little joys..." aria-label="Search products"></div>
+  <div class="header-actions"><div class="wallet">✦ <span id="balance">∞</span> FUN CASH</div><button class="cart-btn" id="openCart">Bag <span id="cartCount">0</span></button></div>
+</header>
+<main>
+  <section class="hero">
+    <div class="hero-copy"><div class="eyebrow">Your cart, your rules</div><h1>Good finds.<br>Zero limits.</h1><p>Fill your basket with all the things you love. Your wallet is on us. ✨</p></div>
+    <div class="hero-art" aria-hidden="true">🛍️</div>
+  </section>
+  <div class="perks"><span><b>✦</b> Unlimited fun cash</span><span><b>♡</b> No real payments</span><span><b>↗</b> Pure shopping vibes</span></div>
+  <div class="section-head"><div><h2>Find your happy</h2><p>Little essentials, big main-character energy.</p></div></div>
+  <nav class="filters" id="filters"></nav>
+  <section class="grid" id="products" aria-live="polite"></section>
+</main>
+<footer>goodcart. · A pretend shop for real good vibes · No real money, orders or deliveries involved.</footer>
+
+<div class="overlay" id="overlay">
+ <aside class="drawer" aria-label="Shopping bag">
+  <div class="drawer-head"><h2>Your bag 🛍️</h2><button class="close" id="closeCart" aria-label="Close bag">×</button></div>
+  <div class="cart-items" id="cartItems"></div>
+  <div class="summary"><div class="sumline"><span>Subtotal</span><b id="subtotal">€0.00</b></div><div class="sumline"><span>Shipping</span><b style="color:#25804e">FREE</b></div><div class="sumline total"><span>Total</span><b id="total">€0.00</b></div><button class="checkout" id="checkout">Place my pretend order →</button><div class="fine">100% pretend checkout · No payment details needed</div></div>
+ </aside>
+</div>
+<div class="toast" id="toast"></div>
+<div class="success" id="success">
+ <div class="success-card"><div class="checkmark">✓</div><div class="eyebrow">Order confirmed</div><h2>It's all yours! 🎉</h2><p>Your pretend order has been placed. Excellent taste, honestly.</p><div class="receipt" id="receipt"></div><button class="continue" id="continue">Back to shopping</button></div>
+</div>
+<script>
+const products=[
+{id:1,name:"Strawberry milk",desc:"Creamy, sweet & dreamy",price:2.49,emoji:"🥛",cat:"Food",tag:"Popular"},
+{id:2,name:"Fresh strawberries",desc:"A little box of sunshine",price:3.29,emoji:"🍓",cat:"Food",tag:"Fresh"},
+{id:3,name:"Avocado toast kit",desc:"Breakfast sorted",price:4.50,emoji:"🥑",cat:"Food"},
+{id:4,name:"Chocolate cookies",desc:"The snack drawer essential",price:2.79,emoji:"🍪",cat:"Food"},
+{id:5,name:"Sushi party box",desc:"A delicious little moment",price:8.99,emoji:"🍣",cat:"Food"},
+{id:6,name:"Iced matcha",desc:"Chill vibes in a cup",price:4.20,emoji:"🍵",cat:"Food"},
+{id:7,name:"Blueberry muffins",desc:"Bakery-fresh happiness",price:3.60,emoji:"🧁",cat:"Food"},
+{id:8,name:"Cheese pizza",desc:"Friday night approved",price:6.99,emoji:"🍕",cat:"Food"},
+{id:9,name:"Wireless headphones",desc:"Your soundtrack, everywhere",price:39.99,emoji:"🎧",cat:"Electronics",tag:"Bestseller"},
+{id:10,name:"Pocket speaker",desc:"Small size, big sound",price:29.50,emoji:"🔊",cat:"Electronics"},
+{id:11,name:"Instant camera",desc:"Keep the little memories",price:69.99,emoji:"📸",cat:"Electronics"},
+{id:12,name:"Gaming controller",desc:"Ready, player one?",price:44.99,emoji:"🎮",cat:"Electronics"},
+{id:13,name:"Mechanical keyboard",desc:"Click-clack perfection",price:74.90,emoji:"⌨️",cat:"Electronics"},
+{id:14,name:"Smart desk lamp",desc:"Set the perfect mood",price:24.99,emoji:"💡",cat:"Electronics"},
+{id:15,name:"Plush teddy",desc:"Certified cozy companion",price:14.99,emoji:"🧸",cat:"Lifestyle"},
+{id:16,name:"Comfy hoodie",desc:"Your new everyday favorite",price:34.99,emoji:"🧥",cat:"Lifestyle"},
+{id:17,name:"Cute water bottle",desc:"Hydration but make it cute",price:12.50,emoji:"🧃",cat:"Lifestyle"},
+{id:18,name:"Desk plant",desc:"A tiny green friend",price:9.99,emoji:"🪴",cat:"Lifestyle"},
+{id:19,name:"Colorful notebook",desc:"For every big idea",price:5.49,emoji:"📓",cat:"Lifestyle"},
+{id:20,name:"Scented candle",desc:"Instant cozy atmosphere",price:11.99,emoji:"🕯️",cat:"Lifestyle"},
+{id:21,name:"Building blocks set",desc:"Make something awesome",price:19.99,emoji:"🧱",cat:"Toys"},
+{id:22,name:"Mini plush duck",desc:"Tiny duck. Huge personality.",price:7.99,emoji:"🐥",cat:"Toys"},
+{id:23,name:"Puzzle set",desc:"A satisfying little challenge",price:10.49,emoji:"🧩",cat:"Toys"},
+{id:24,name:"Remote-control car",desc:"Zoom zoom, living room edition",price:27.99,emoji:"🏎️",cat:"Toys"}
+];
+const categories=["All","Food","Electronics","Lifestyle","Toys"];
+let active="All",cart={};
+const $=id=>document.getElementById(id);
+const euro=n=>"€"+n.toFixed(2);
+function renderFilters(){$("filters").innerHTML=categories.map(c=>`<button class="filter ${active===c?"active":""}" data-cat="${c}">${c==="All"?"✦ ": ""}${c}</button>`).join("");}
+function renderProducts(){
+ const q=$("search").value.toLowerCase();
+ const shown=products.filter(p=>(active==="All"||p.cat===active)&&(p.name+" "+p.desc+" "+p.cat).toLowerCase().includes(q));
+ $("products").innerHTML=shown.length?shown.map(p=>`<article class="product"><div class="photo"><span>${p.emoji}</span>${p.tag?`<span class="tag">${p.tag}</span>`:""}</div><h3>${p.name}</h3><p class="desc">${p.desc}</p><div class="buy-row"><span class="price">${euro(p.price)}</span><button class="add" data-add="${p.id}" aria-label="Add ${p.name} to bag">+</button></div></article>`).join(""):`<div class="empty">No finds here yet. Try another search ✨</div>`;
+}
+function count(){return Object.values(cart).reduce((a,b)=>a+b,0)}
+function total(){return products.reduce((s,p)=>s+p.price*(cart[p.id]||0),0)}
+function updateCart(){
+ $("cartCount").textContent=count();$("subtotal").textContent=euro(total());$("total").textContent=euro(total());
+ const items=products.filter(p=>cart[p.id]);
+ $("cartItems").innerHTML=items.length?items.map(p=>`<div class="cart-item"><div class="cart-emoji">${p.emoji}</div><div class="item-info"><b>${p.name}</b><small>${euro(p.price)} each</small></div><div class="qty"><button data-change="${p.id}" data-delta="-1">−</button><b>${cart[p.id]}</b><button data-change="${p.id}" data-delta="1">+</button></div></div>`).join(""):`<div class="empty">Your bag is taking a little nap 💤<br><br>Add something you love!</div>`;
+}
+function toast(msg){$("toast").textContent=msg;$("toast").classList.add("show");setTimeout(()=>$("toast").classList.remove("show"),1700)}
+$("filters").addEventListener("click",e=>{const b=e.target.closest("[data-cat]");if(!b)return;active=b.dataset.cat;renderFilters();renderProducts()});
+$("products").addEventListener("click",e=>{const b=e.target.closest("[data-add]");if(!b)return;const id=+b.dataset.add;cart[id]=(cart[id]||0)+1;updateCart();toast(products.find(p=>p.id===id).name+" added to your bag ✨")});
+$("search").addEventListener("input",renderProducts);
+$("openCart").onclick=()=>{$("overlay").classList.add("show");updateCart()};
+$("closeCart").onclick=()=>$("overlay").classList.remove("show");
+$("overlay").addEventListener("click",e=>{if(e.target===$("overlay"))$("overlay").classList.remove("show")});
+$("cartItems").addEventListener("click",e=>{const b=e.target.closest("[data-change]");if(!b)return;const id=+b.dataset.change;cart[id]=(cart[id]||0)+ +b.dataset.delta;if(cart[id]<=0)delete cart[id];updateCart()});
+$("checkout").onclick=()=>{
+ if(!count()){toast("Your bag is empty — add a little treat first!");return}
+ const orderTotal=total(),orderCount=count(),orderNo="GC-"+Math.floor(100000+Math.random()*900000);
+ $("receipt").innerHTML=`<div><span>Order number</span><b>${orderNo}</b></div><div><span>Items</span><b>${orderCount}</b></div><div><span>Shipping</span><b>FREE</b></div><div style="border-top:1px dashed #d7e1d4;padding-top:10px;margin-top:12px;font-size:16px"><b>Total</b><b>${euro(orderTotal)}</b></div>`;
+ $("overlay").classList.remove("show");$("success").classList.add("show");cart={};updateCart();
+};
+$("continue").onclick=()=>$("success").classList.remove("show");
+renderFilters();renderProducts();updateCart();
+</script>
+</body>
+</html>
